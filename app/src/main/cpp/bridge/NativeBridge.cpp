@@ -6,7 +6,7 @@
 #include "NativeBridgeConstants.h"
 #include "../cheat/data/GlobalSettings.h"
 #include "../utils/logger.h"
-//#include "../cheat/memory/MemoryManager.h"
+#include "../cheat/memory/MemoryManager.h"
 
 const char *NativeBridge::TAG = "jni_NativeBridge";
 bool NativeBridge::isShouldRunThread = true;
@@ -21,10 +21,10 @@ void *NativeBridge::cheatThread(void *) {
 //        }
     } else {
         LOGD(TAG, "RELEASE build");
-//        if (!MemoryManager::initialize()) {
-//            LOGD(TAG, "Could not initialize MemoryManager");
-//            return nullptr;
-//        }
+        if (!MemoryManager::initialize()) {
+            LOGD(TAG, "Could not initialize MemoryManager");
+            return nullptr;
+        }
 //        while (NativeBridge::isShouldRunThread) {
 //
 //        }

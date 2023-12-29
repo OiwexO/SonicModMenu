@@ -45,6 +45,10 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 
         cheat/data/GlobalSettings.cpp
 
+        cheat/memory/inner/GameManager.cpp
+        cheat/memory/inner/SaveEditor.cpp
+        cheat/memory/MemoryManager.cpp
+
         sonicmodmenu.cpp
 
         )
