@@ -6,6 +6,7 @@ class NativeBridge {
         init {
             System.loadLibrary("sonicmodmenu")
         }
+        external fun setGameVersion(version: Int)
         external fun setScore(score: Int)
         external fun setLives(lives: Int)
         external fun setRings(rings: Int)

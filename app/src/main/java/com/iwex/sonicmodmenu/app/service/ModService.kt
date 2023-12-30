@@ -12,7 +12,8 @@ import com.iwex.sonicmodmenu.app.view.FloatingMenuLayout
 import com.iwex.sonicmodmenu.app.view.GameTabLayout
 import com.iwex.sonicmodmenu.app.view.OtherTabLayout
 import com.iwex.sonicmodmenu.app.view.SaveEditorTabLayout
-import com.iwex.sonicmodmenu.app.viewmodel.MenuViewModel
+import com.iwex.sonicmodmenu.app.viewmodel.GameTabViewModel
+import com.iwex.sonicmodmenu.app.viewmodel.SaveEditorTabViewModel
 
 class ModService : Service() {
     private lateinit var windowManager: WindowManager
@@ -30,19 +31,15 @@ class ModService : Service() {
         super.onCreate()
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         Toast.makeText(this, TOAST_TEXT, Toast.LENGTH_LONG).show()
-        setupNativeBridge()
         setupFloatingMenu()
-    }
-
-    private fun setupNativeBridge() {
-        NativeBridge.setSaveFilePath("CHANGE_ME")
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupFloatingMenu() {
-        val menuViewModel = MenuViewModel()
-        val gameTabLayout = GameTabLayout(this, menuViewModel)
-        val saveEditorTabLayout = SaveEditorTabLayout(this, menuViewModel)
+        val gameTabViewModel = GameTabViewModel()
+        val saveEditorTabViewModel = SaveEditorTabViewModel()
+        val gameTabLayout = GameTabLayout(this, gameTabViewModel)
+        val saveEditorTabLayout = SaveEditorTabLayout(this, saveEditorTabViewModel)
         val otherTabLayout = OtherTabLayout(this)
         floatingMenu = FloatingMenuLayout(this, gameTabLayout, saveEditorTabLayout, otherTabLayout)
         floatingMenu.setOnTouchListener(

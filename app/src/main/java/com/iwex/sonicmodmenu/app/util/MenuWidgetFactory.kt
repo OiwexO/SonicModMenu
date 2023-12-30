@@ -59,9 +59,15 @@ class MenuWidgetFactory {
             progress: Int,
             progressListener: (progress: Int) -> Unit,
             context: Context,
-            parent: ViewGroup
+            parent: ViewGroup,
+            textLabelValues: Array<String>? = null
         ): SeekBar {
-            val textViewLabel = addSeekBarLabel(label, progress, context, parent)
+            val isTextLabel = textLabelValues != null && textLabelValues.size == max + 1
+            val textViewLabel = if (isTextLabel) {
+                addSeekBarLabel(label, textLabelValues!![progress], context, parent)
+            } else {
+                addSeekBarLabel(label, progress, context, parent)
+            }
             return SeekBar(context).apply {
                 this.max = max
                 this.progress = progress
@@ -75,7 +81,10 @@ class MenuWidgetFactory {
                 parent.addView(this)
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                        textViewLabel.text = String.format(label, progress)
+                        textViewLabel.text = String.format(
+                            label,
+                            if (isTextLabel) textLabelValues!![progress] else progress
+                        )
                         progressListener(progress)
                     }
 
@@ -87,14 +96,14 @@ class MenuWidgetFactory {
             }
         }
 
-        private fun addSeekBarLabel(
+        private fun <T>addSeekBarLabel(
             label: String,
-            progress: Int,
+            value: T,
             context: Context,
             parent: ViewGroup
         ): TextView {
             return TextView(context).apply {
-                text = String.format(label, progress)
+                text = String.format(label, value)
                 setTextColor(MenuDesign.Colors.MAIN)
                 parent.addView(this)
             }
@@ -170,7 +179,11 @@ class MenuWidgetFactory {
                         label,
                         maxValue,
                         { inputNumber ->
-                            text = String.format("%s%d", label, inputNumber)
+                            text = if (isBinary) {
+                                String.format("%s%s", label, Integer.toBinaryString(inputNumber))
+                            } else {
+                                String.format("%s%d", label, inputNumber)
+                            }
                             onInputChangedListener(inputNumber)
                         },
                         isBinary
@@ -194,7 +207,16 @@ class MenuWidgetFactory {
             dialogBuilder.setTitle("Input $label")
             dialogBuilder.setView(editText)
             dialogBuilder.setPositiveButton("OK") { _, _ ->
-                var inputNumber = editText.text.toString().toIntOrNull() ?: maxValue
+                val inputText = editText.text.toString()
+                var inputNumber = if (isBinary) {
+                    try {
+                        inputText.toInt(2)
+                    } catch (e: NumberFormatException) {
+                        0
+                    }
+                } else {
+                    inputText.toIntOrNull() ?: maxValue
+                }
                 inputNumber = inputNumber.coerceAtMost(maxValue)
                 onInputChangedListener(inputNumber)
                 editText.isFocusable = false

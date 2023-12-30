@@ -2,18 +2,17 @@ package com.iwex.sonicmodmenu.app.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Switch
 import androidx.core.view.setPadding
 import com.iwex.sonicmodmenu.app.util.MenuDesign
 import com.iwex.sonicmodmenu.app.util.MenuWidgetFactory
-import com.iwex.sonicmodmenu.app.viewmodel.MenuViewModel
+import com.iwex.sonicmodmenu.app.viewmodel.GameTabViewModel
 
 @SuppressLint("UseSwitchCompatOrMaterialCode", "ViewConstructor")
 class GameTabLayout(
-    context: Context, private val viewModel: MenuViewModel
+    context: Context, private val viewModel: GameTabViewModel
 ) : LinearLayout(context) {
     private val scoreInput: Button
     private val livesInput: Button

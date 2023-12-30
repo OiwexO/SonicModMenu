@@ -2,7 +2,7 @@ package com.iwex.sonicmodmenu.app.viewmodel
 
 import com.iwex.sonicmodmenu.app.NativeBridge
 
-class MenuViewModel {
+class GameTabViewModel {
     fun onScoreChange(score: Int) {
         NativeBridge.setScore(score)
     }
@@ -27,7 +27,4 @@ class MenuViewModel {
         NativeBridge.setSuperForm(isChecked)
     }
 
-    fun onSaveSlotChange(slotIndex: Int) {
-        NativeBridge.readSaveFile(slotIndex)
-    }
 }

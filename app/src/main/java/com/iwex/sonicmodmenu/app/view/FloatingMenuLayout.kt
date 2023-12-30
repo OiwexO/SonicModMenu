@@ -35,7 +35,7 @@ class FloatingMenuLayout(
         private const val TAG = "FloatingMenuLayout.kt"
         private const val LABEL_MENU_TITLE = "Sonic mod menu by OiwexO"
         private const val LABEL_GAME_BUTTON = "GAME"
-        private const val LABEL_SAVE_EDITOR_BUTTON = "SAVE EDITOR"
+        private const val LABEL_SAVES_BUTTON = "SAVES"
         private const val LABEL_OTHER_BUTTON = "OTHER"
         private const val LABEL_CLOSE_MENU_BUTTON = "CLOSE MENU"
 
@@ -144,7 +144,7 @@ class FloatingMenuLayout(
     private fun addTabButton(tab: TabTypes, context: Context) {
         val label = when (tab) {
             TabTypes.GAME -> LABEL_GAME_BUTTON
-            TabTypes.SAVE_EDITOR -> LABEL_SAVE_EDITOR_BUTTON
+            TabTypes.SAVE_EDITOR -> LABEL_SAVES_BUTTON
             TabTypes.OTHER -> LABEL_OTHER_BUTTON
         }
         val marginPx = MenuDesign.Measurements.BUTTON_MARGIN

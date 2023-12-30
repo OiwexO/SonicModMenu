@@ -11,6 +11,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import com.iwex.sonicmodmenu.app.service.ModService
+import com.iwex.sonicmodmenu.app.util.GameVersionChecker
 import com.iwex.sonicmodmenu.app.util.MenuDesign
 
 class LauncherActivity : Activity() {
@@ -73,6 +74,7 @@ class LauncherActivity : Activity() {
                 Log.e(TAG, LOG_WRONG_CONTEXT)
                 return
             }
+            GameVersionChecker.initGameVersion(context)
             MenuDesign.initDisplayMetrics(context)
             val intent = Intent(context, LauncherActivity::class.java)
             context.startActivity(intent)

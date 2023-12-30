@@ -8,8 +8,11 @@ class NativeBridge {
 private:
     static const char* TAG;
     static bool isShouldRunThread;
+    static constexpr int VERSION_INCORRECT = -1;
+    static constexpr int VERSION_DEBUG = 0;
 
     static void* cheatThread(void*);
+    static void setGameVersion(JNIEnv*, jobject, jint gameVersion);
     static void setScore(JNIEnv*, jobject, jint score);
     static void setLives(JNIEnv*, jobject, jint lives);
     static void setRings(JNIEnv*, jobject, jint rings);

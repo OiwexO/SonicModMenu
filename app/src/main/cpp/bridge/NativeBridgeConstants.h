@@ -12,6 +12,7 @@
 
 /* METHOD NAMES ==================================================================================*/
 
+#define METHOD_SET_GAME_VERSION "setGameVersion"
 #define METHOD_SET_SCORE "setScore"
 #define METHOD_SET_LIVES "setLives"
 #define METHOD_SET_RINGS "setRings"
@@ -29,6 +30,7 @@
 
 /* METHOD SIGNATURES =============================================================================*/
 
+#define SIG_SET_GAME_VERSION "(I)V"
 #define SIG_SET_SCORE "(I)V"
 #define SIG_SET_LIVES "(I)V"
 #define SIG_SET_RINGS "(I)V"
