@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-bool MemoryManager::isInitialised = false;
+bool MemoryManager::_isInitialized = false;
 ADDRESS MemoryManager::gameModuleBase = 0;
 
 ADDRESS MemoryManager::findModuleBase(const char *moduleName) {
@@ -32,6 +32,6 @@ bool MemoryManager::initialize() {
         sleep(1);
     }
     GameManager::initialize(gameModuleBase);
-    isInitialised = true;
+    _isInitialized = true;
     return true;
 }

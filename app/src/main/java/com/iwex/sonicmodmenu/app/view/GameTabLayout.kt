@@ -2,7 +2,8 @@ package com.iwex.sonicmodmenu.app.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.widget.EditText
+import android.view.View
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Switch
 import androidx.core.view.setPadding
@@ -14,9 +15,9 @@ import com.iwex.sonicmodmenu.app.viewmodel.MenuViewModel
 class GameTabLayout(
     context: Context, private val viewModel: MenuViewModel
 ) : LinearLayout(context) {
-    private val scoreInput: EditText
-    private val livesInput: EditText
-    private val ringsInput: EditText
+    private val scoreInput: Button
+    private val livesInput: Button
+    private val ringsInput: Button
 
     private val shieldSwitch: Switch
     private val invincibilitySwitch: Switch
@@ -42,7 +43,7 @@ class GameTabLayout(
         setBackgroundColor(MenuDesign.Colors.TAB_BACKGROUND)
         setPadding(MenuDesign.Measurements.TAB_PADDING)
 
-        scoreInput = MenuWidgetFactory.addIntInputField(
+        scoreInput = MenuWidgetFactory.addNumberInput(
             LABEL_SCORE,
             MAX_SCORE,
             viewModel::onScoreChange,
@@ -50,7 +51,7 @@ class GameTabLayout(
             this
         )
 
-        livesInput = MenuWidgetFactory.addIntInputField(
+        livesInput = MenuWidgetFactory.addNumberInput(
             LABEL_LIVES,
             MAX_LIVES,
             viewModel::onLivesChange,
@@ -58,7 +59,7 @@ class GameTabLayout(
             this
         )
 
-        ringsInput = MenuWidgetFactory.addIntInputField(
+        ringsInput = MenuWidgetFactory.addNumberInput(
             LABEL_RINGS,
             MAX_RINGS,
             viewModel::onRingsChange,

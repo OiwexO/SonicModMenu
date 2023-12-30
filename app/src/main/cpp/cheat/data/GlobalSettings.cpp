@@ -8,6 +8,7 @@ bool GlobalSettings::IS_DEBUG = true;
 bool GlobalSettings::IS_DEBUG = false;
 #endif
 
+bool GlobalSettings::isShieldEnabled = false;
 bool GlobalSettings::isInvincibilityEnabled = false;
 bool GlobalSettings::isSuperFormEnabled = false;
 

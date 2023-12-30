@@ -6,6 +6,7 @@
 class GlobalSettings {
 public:
     static bool IS_DEBUG;
+    static bool isShieldEnabled;
     static bool isInvincibilityEnabled;
     static bool isSuperFormEnabled;
 

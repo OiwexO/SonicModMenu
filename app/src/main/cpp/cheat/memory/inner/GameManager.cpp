@@ -40,14 +40,27 @@ void MemoryManager::GameManager::setRings(int ringsValue) {
 	write(rings, ringsValue);
 }
 
-void MemoryManager::GameManager::setShield(bool value) {
-	write(shield, value);
+void MemoryManager::GameManager::enableShield() {
+	write(shield, 1);
 }
 
-void MemoryManager::GameManager::setInvincibility(bool value) {
-	write(invincibility, value);
+void MemoryManager::GameManager::disableShield() {
+	write(shield, 0);
 }
 
-void MemoryManager::GameManager::setSuperForm(bool value) {
-	write(superForm, value);
+void MemoryManager::GameManager::enableInvincibility() {
+	write(invincibility, INVINCIBILITY_DURATION);
+}
+
+void MemoryManager::GameManager::disableInvincibility() {
+	write(invincibility, 0);
+}
+
+void MemoryManager::GameManager::enableSuperForm() {
+	write(rings, 99);
+	write(superForm, 1);
+}
+
+void MemoryManager::GameManager::disableSuperForm() {
+	write(superForm, 0);
 }

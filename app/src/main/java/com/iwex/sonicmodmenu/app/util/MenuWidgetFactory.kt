@@ -1,18 +1,22 @@
 package com.iwex.sonicmodmenu.app.util
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
-import android.text.Editable
-import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.text.InputType
-import android.text.TextWatcher
+import android.text.method.DigitsKeyListener
 import android.view.Gravity
+import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -20,6 +24,7 @@ import android.widget.SeekBar
 import android.widget.Switch
 import android.widget.TextView
 import androidx.core.view.setMargins
+
 
 class MenuWidgetFactory {
     companion object {
@@ -45,52 +50,6 @@ class MenuWidgetFactory {
                 setOnCheckedChangeListener { _, isChecked ->
                     checkedListener(isChecked)
                 }
-            }
-        }
-
-        fun addIntInputField(
-            label: String,
-            max: Int,
-            onInputChangedListener: (input: Int) -> Unit,
-            context: Context,
-            parent: ViewGroup
-            ): EditText {
-//            val textViewLabel = addInputFieldLabel(label, context, parent)
-            return EditText(context).apply {
-                filters = arrayOf(InputFilter.LengthFilter(max.toString().length))
-                inputType = InputType.TYPE_CLASS_NUMBER
-                hint = label
-                addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-                    override fun afterTextChanged(editable: Editable?) {
-                        val inputText = editable.toString().trim()
-                        if (inputText.isNotBlank()) {
-                            val input = inputText.toInt()
-                            if (input in 0..max) {
-                                onInputChangedListener(input)
-                            }
-                        }
-                    }
-                })
-                if (Build.VERSION.SDK_INT >= 29) {
-                    minHeight = MenuDesign.Measurements.SEEKBAR_HEIGHT
-                }
-                parent.addView(this)
-            }
-        }
-
-        private fun addInputFieldLabel(
-            label: String,
-            context: Context,
-            parent: ViewGroup
-        ): TextView {
-            return TextView(context).apply {
-                text = label
-                setTextColor(MenuDesign.Colors.MAIN)
-                parent.addView(this)
             }
         }
 
@@ -151,7 +110,7 @@ class MenuWidgetFactory {
                 text = label
                 if (addMargin) {
                     layoutParams = LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                        LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT
                     ).apply {
                         setMargins(MenuDesign.Measurements.BUTTON_MARGIN)
                     }
@@ -185,6 +144,97 @@ class MenuWidgetFactory {
             }
         }
 
+        @SuppressLint("SetTextI18n")
+        fun addNumberInput(
+            label: String,
+            maxValue: Int,
+            onInputChangedListener: (input: Int) -> Unit,
+            context: Context,
+            parent: ViewGroup,
+            isBinary: Boolean = false
+        ): Button {
+            val linearLayout = LinearLayout(context)
+            val widgetButton = Button(context).apply {
+                text = String.format("%s%d", label, 0)
+                isAllCaps = false
+                layoutParams = LinearLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
+                ).apply {
+                    setMargins(MenuDesign.Measurements.BUTTON_MARGIN)
+                }
+                background = getButtonBackground()
+                setTextColor(MenuDesign.Colors.BUTTON_TEXT)
+                setOnClickListener {
+                    showNumberInputDialog(
+                        context,
+                        label,
+                        maxValue,
+                        { inputNumber ->
+                            text = String.format("%s%d", label, inputNumber)
+                            onInputChangedListener(inputNumber)
+                        },
+                        isBinary
+                    )
+                }
+            }
+            linearLayout.addView(widgetButton)
+            parent.addView(linearLayout)
+            return widgetButton
+        }
+
+        private fun showNumberInputDialog(
+            context: Context,
+            label: String,
+            maxValue: Int,
+            onInputChangedListener: (input: Int) -> Unit,
+            isBinary: Boolean
+        ) {
+            val editText = createInputDialogContentView(context, maxValue, isBinary)
+            val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
+            dialogBuilder.setTitle("Input $label")
+            dialogBuilder.setView(editText)
+            dialogBuilder.setPositiveButton("OK") { _, _ ->
+                var inputNumber = editText.text.toString().toIntOrNull() ?: maxValue
+                inputNumber = inputNumber.coerceAtMost(maxValue)
+                onInputChangedListener(inputNumber)
+                editText.isFocusable = false
+            }
+            dialogBuilder.setNegativeButton("Cancel") { _, _ ->
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(editText.windowToken, 0)
+            }
+            val dialog: AlertDialog = dialogBuilder.create()
+            val windowType =
+                if (Build.VERSION.SDK_INT >= 26) WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                else WindowManager.LayoutParams.TYPE_APPLICATION
+            dialog.window?.setType(windowType)
+            dialog.show()
+            editText.requestFocus()
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
+        }
+
+        private fun createInputDialogContentView(
+            context: Context,
+            maxValue: Int,
+            isBinary: Boolean
+        ): EditText {
+            val editText = EditText(context).apply {
+                hint = StringBuilder("Max value: ").append(maxValue).toString()
+                inputType = InputType.TYPE_CLASS_NUMBER
+                keyListener = DigitsKeyListener.getInstance(if (isBinary) "01" else "0123456789")
+                filters = arrayOf(LengthFilter(if (isBinary) 7 else 6))
+                onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
+                    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    if (hasFocus) {
+                        imm.showSoftInput(this, InputMethodManager.SHOW_FORCED)
+                    } else {
+                        imm.hideSoftInputFromWindow(windowToken, 0)
+                    }
+                }
+            }
+            return editText
+        }
 
     }
 }

@@ -47,8 +47,6 @@ class FloatingMenuLayout(
         }
     }
 
-
-
     init {
         floatingIconView = initFloatingIconView(context)
         addView(floatingIconView)
@@ -93,13 +91,13 @@ class FloatingMenuLayout(
 
         return ImageView(context).apply {
             layoutParams = LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
             )
             layoutParams.height = iconSize
             layoutParams.width = iconSize
             scaleType = ImageView.ScaleType.FIT_XY
             setImageBitmap(BitmapFactory.decodeByteArray(decoded, 0, decoded.size))
-
         }
     }
 

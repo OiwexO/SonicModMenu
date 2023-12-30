@@ -6,7 +6,7 @@ using ADDRESS = unsigned int;
 
 class MemoryManager {
 private:
-	static bool isInitialised;
+	static bool _isInitialized;
 
 	// address of the libRetroEngineJNI.so library in game's memory
 	static ADDRESS gameModuleBase;
@@ -20,16 +20,17 @@ private:
 
 	template<typename T>
 	static void write(ADDRESS address, T value) {
-//		*reinterpret_cast<T*>(address) = value;
+		*reinterpret_cast<T*>(address) = value;
 	}
 
 public:
 	static bool initialize();
-	static bool isInitialized() { return isInitialised; };
+	static bool isInitialized() { return _isInitialized; };
 	static ADDRESS getGameModuleBase() { return gameModuleBase; }
 
 	class GameManager {
 	private:
+        static constexpr int INVINCIBILITY_DURATION = 200;
 		static ADDRESS score;
 		static ADDRESS lives;
 		static ADDRESS rings;
@@ -42,9 +43,12 @@ public:
 		static void setScore(int scoreValue);
 		static void setLives(int livesValue);
 		static void setRings(int ringsValue);
-		static void setShield(bool value);
-		static void setInvincibility(bool value);
-		static void setSuperForm(bool value);
+		static void enableShield();
+		static void disableShield();
+		static void enableInvincibility();
+		static void disableInvincibility();
+		static void enableSuperForm();
+		static void disableSuperForm();
 
 	};
 

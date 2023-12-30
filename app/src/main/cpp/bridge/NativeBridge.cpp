@@ -10,57 +10,70 @@
 
 const char *NativeBridge::TAG = "jni_NativeBridge";
 bool NativeBridge::isShouldRunThread = true;
-//JavaVM *NativeBridge::mJvm = nullptr;
-//JNIEnv *NativeBridge::mEnv = nullptr;
 
 void *NativeBridge::cheatThread(void *) {
     if (GlobalSettings::IS_DEBUG) {
         LOGD(TAG, "DEBUG build");
-//        while (NativeBridge::isShouldRunThread) {
-//
-//        }
     } else {
         LOGD(TAG, "RELEASE build");
         if (!MemoryManager::initialize()) {
             LOGD(TAG, "Could not initialize MemoryManager");
             return nullptr;
         }
-//        while (NativeBridge::isShouldRunThread) {
-//
-//        }
+        while (NativeBridge::isShouldRunThread) {
+            if (GlobalSettings::isShieldEnabled) {
+                MemoryManager::GameManager::enableShield();
+            }
+            if (GlobalSettings::isInvincibilityEnabled) {
+                MemoryManager::GameManager::enableInvincibility();
+            }
+            if (GlobalSettings::isSuperFormEnabled) {
+                MemoryManager::GameManager::enableSuperForm();
+            }
+            sleep(2);
+        }
     }
     LOGD(TAG, "Exiting cheatThread()");
     return nullptr;
 }
 
 void NativeBridge::setScore(JNIEnv *, jobject, jint score) {
-//    MemoryManager::GameManager::setScore(score);
-    LOGD(TAG, "setScore: %d", score);
+    MemoryManager::GameManager::setScore(score);
+//    LOGD(TAG, "setScore: %d", score);
 }
 
 void NativeBridge::setLives(JNIEnv *, jobject, jint lives) {
-//    MemoryManager::GameManager::setLives(lives);
-    LOGD(TAG, "setLives: %d", lives);
+    MemoryManager::GameManager::setLives(lives);
+//    LOGD(TAG, "setLives: %d", lives);
 }
 
 void NativeBridge::setRings(JNIEnv *, jobject, jint rings) {
-//    MemoryManager::GameManager::setRings(rings);
-    LOGD(TAG, "setRings: %d", rings);
+    MemoryManager::GameManager::setRings(rings);
+//    LOGD(TAG, "setRings: %d", rings);
 }
 
 void NativeBridge::setShield(JNIEnv *, jobject, jboolean value) {
-//    MemoryManager::GameManager::setShield(value);
-    LOGD(TAG, "setShield: %d", value);
+    GlobalSettings::isShieldEnabled = value;
+    if (!GlobalSettings::isShieldEnabled) {
+        MemoryManager::GameManager::disableShield();
+    }
+//    LOGD(TAG, "enableShield: %d", value);
 }
 
 void NativeBridge::setInvincibility(JNIEnv *, jobject, jboolean value) {
-//    MemoryManager::GameManager::setInvincibility(value);
-    LOGD(TAG, "setInvincibility: %d", value);
+    GlobalSettings::isInvincibilityEnabled = value;
+    if (!GlobalSettings::isInvincibilityEnabled) {
+        MemoryManager::GameManager::disableInvincibility();
+    }
+//    LOGD(TAG, "enableInvincibility: %d", value);
 }
 
 void NativeBridge::setSuperForm(JNIEnv *, jobject, jboolean value) {
-//    MemoryManager::GameManager::setSuperForm(value);
-    LOGD(TAG, "setSuperForm: %d", value);
+    GlobalSettings::isSuperFormEnabled = value;
+    if (!GlobalSettings::isSuperFormEnabled) {
+        MemoryManager::GameManager::disableSuperForm();
+    }
+//    LOGD(TAG, "enableSuperForm: %d", value);
 }
 
 jintArray NativeBridge::readSaveFile(JNIEnv *env, jobject, jint slotIndex) {

@@ -8,9 +8,7 @@ class NativeBridge {
 private:
     static const char* TAG;
     static bool isShouldRunThread;
-//    static JavaVM* mJvm;
-//    static JNIEnv* mEnv;
-    // runs prediction and updates EspView
+
     static void* cheatThread(void*);
     static void setScore(JNIEnv*, jobject, jint score);
     static void setLives(JNIEnv*, jobject, jint lives);
