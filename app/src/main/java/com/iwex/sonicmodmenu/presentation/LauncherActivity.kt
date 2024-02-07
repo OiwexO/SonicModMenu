@@ -1,4 +1,4 @@
-package com.iwex.sonicmodmenu.app
+package com.iwex.sonicmodmenu.presentation
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -10,57 +10,50 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
-import com.iwex.sonicmodmenu.app.service.ModService
-import com.iwex.sonicmodmenu.app.util.GameVersionChecker
-import com.iwex.sonicmodmenu.app.util.MenuDesign
+import com.iwex.sonicmodmenu.NativeBridge
+import com.iwex.sonicmodmenu.presentation.service.ModService
+import com.iwex.sonicmodmenu.util.GameVersionChecker
+import com.iwex.sonicmodmenu.util.MenuDesign
 
 class LauncherActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        handleOverlayPermission()
+    }
+
+    private fun handleOverlayPermission() {
         if (isOverlayPermissionProvided) {
             startService()
+        } else {
+            requestOverlayPermission()
         }
     }
 
     private val isOverlayPermissionProvided: Boolean
-        get() {
-            return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                true
-            } else {
-                if (Settings.canDrawOverlays(this)) {
-                    true
-                } else {
-                    requestOverlayPermission()
-                    false
-                }
-            }
-        }
+        get() = Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
 
     @SuppressLint("InlinedApi")
     private fun requestOverlayPermission() {
         Toast.makeText(this, TOAST_ENABLE_OVERLAY_PERMISSION, Toast.LENGTH_LONG).show()
         val intent = Intent(
-            Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${packageName}")
+            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            Uri.parse("package:${packageName}")
         )
         startActivityForResult(intent, REQUEST_OVERLAY_PERMISSION)
-    }
-
-    private fun startService() {
-        val intent = Intent(this, ModService::class.java)
-        startService(intent)
-        finish()
     }
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_OVERLAY_PERMISSION) {
-            if (isOverlayPermissionProvided) {
-                startService()
-            } else {
-                Toast.makeText(this, TOAST_ENABLE_OVERLAY_PERMISSION, Toast.LENGTH_LONG).show()
-            }
+            handleOverlayPermission()
         }
+    }
+
+    private fun startService() {
+        val intent = Intent(this, ModService::class.java)
+        startService(intent)
+        finish()
     }
 
     companion object {
@@ -74,6 +67,7 @@ class LauncherActivity : Activity() {
                 Log.e(TAG, LOG_WRONG_CONTEXT)
                 return
             }
+            NativeBridge.setSaveFilePath(context.filesDir.toString())
             GameVersionChecker.initGameVersion(context)
             MenuDesign.initDisplayMetrics(context)
             val intent = Intent(context, LauncherActivity::class.java)

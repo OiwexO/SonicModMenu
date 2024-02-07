@@ -7,11 +7,15 @@ unsigned int MemoryManager::SaveEditor::saveRam[SAVE_RAM_SIZE] = {0};
 char* MemoryManager::SaveEditor::saveFilePath = nullptr;
 
 void MemoryManager::SaveEditor::setSaveFilePath(char *path) {
-	saveFilePath = path;
+    saveFilePath = new char[strlen(path)];
+    strcpy(saveFilePath, path);
 }
 
 int* MemoryManager::SaveEditor::readSaveFile(int slotIndex) {
     int* saveSlotData = new int[SAVE_DATA_SIZE]{};
+    if (saveFilePath == nullptr) {
+        return saveSlotData;
+    }
 	FILE* saveFile = fopen(saveFilePath, "rb");
     if (saveFile == nullptr) {
         return saveSlotData;
@@ -37,6 +41,9 @@ int* MemoryManager::SaveEditor::readSaveFile(int slotIndex) {
 }
 
 bool MemoryManager::SaveEditor::writeSaveFile(int slotIndex, const int* saveSlotData) {
+    if (saveFilePath == nullptr) {
+        return false;
+    }
 	FILE* saveFile = fopen(saveFilePath, "wb");
     if (saveFile == nullptr) return false;
 	int saveSlotOffset = slotIndex * 4 * 8;

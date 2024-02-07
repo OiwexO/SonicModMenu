@@ -1,19 +1,16 @@
-package com.iwex.sonicmodmenu.app.view
+package com.iwex.sonicmodmenu.presentation.view
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.Switch
-import androidx.core.view.setPadding
-import com.iwex.sonicmodmenu.app.util.MenuDesign
-import com.iwex.sonicmodmenu.app.util.MenuWidgetFactory
-import com.iwex.sonicmodmenu.app.viewmodel.GameTabViewModel
+import com.iwex.sonicmodmenu.presentation.viewmodel.GameTabViewModel
+import com.iwex.sonicmodmenu.util.MenuWidgetFactory
 
 @SuppressLint("UseSwitchCompatOrMaterialCode", "ViewConstructor")
-class GameTabLayout(
+class GameTab(
     context: Context, private val viewModel: GameTabViewModel
-) : LinearLayout(context) {
+) : BaseMenuTab(context) {
     private val scoreInput: Button
     private val livesInput: Button
     private val ringsInput: Button
@@ -23,9 +20,9 @@ class GameTabLayout(
     private val superFormSwitch: Switch
 
     companion object {
-        private const val LABEL_SCORE = "score:"
-        private const val LABEL_LIVES = "lives:"
-        private const val LABEL_RINGS = "rings:"
+        private const val LABEL_SCORE = "score"
+        private const val LABEL_LIVES = "lives"
+        private const val LABEL_RINGS = "rings"
 
         private const val LABEL_ENABLE_SHIELD = "enable shield"
         private const val LABEL_ENABLE_INVINCIBILITY = "enable invincibility"
@@ -38,10 +35,6 @@ class GameTabLayout(
     }
 
     init {
-        orientation = VERTICAL
-        setBackgroundColor(MenuDesign.Colors.TAB_BACKGROUND)
-        setPadding(MenuDesign.Measurements.TAB_PADDING)
-
         scoreInput = MenuWidgetFactory.addNumberInput(
             LABEL_SCORE,
             MAX_SCORE,

@@ -1,16 +1,7 @@
 // Created by OiwexO on 29.12.2023.
 
 #include "../MemoryManager.h"
-// choose correct offsets according to the definition in CMakeLists.txt
-#ifdef SONIC_1
-#include "../Sonic1Offsets.h"
-#elif defined(SONIC_2)
-#include "../Sonic2Offsets.h"
-#elif defined(SONIC_3)
-#include "../Sonic3Offsets.h"
-#elif defined(SONIC_CD)
-#include "../SonicCDOffsets.h"
-#endif
+#include "../Sonic1Offsets.h" //TODO fix offsets choice
 
 ADDRESS MemoryManager::GameManager::score = 0;
 ADDRESS MemoryManager::GameManager::lives = 0;

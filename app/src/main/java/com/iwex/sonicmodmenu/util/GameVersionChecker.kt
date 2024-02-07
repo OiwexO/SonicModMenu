@@ -1,8 +1,8 @@
-package com.iwex.sonicmodmenu.app.util
+package com.iwex.sonicmodmenu.util
 
 import android.content.Context
 import android.util.Log
-import com.iwex.sonicmodmenu.app.NativeBridge
+import com.iwex.sonicmodmenu.NativeBridge
 
 class GameVersionChecker {
     companion object {
@@ -15,7 +15,6 @@ class GameVersionChecker {
         private const val VERSION_SONIC1 = 1
         private const val VERSION_SONIC2 = 2
         private const val LOG_INCORRECT_PACKAGE = "Incorrect app's package name! Mod will not work correctly"
-        private const val SAVE_FILE_NAME = "/SGame.bin"
         private var GAME_VERSION = VERSION_INCORRECT
         fun initGameVersion(context: Context) {
             GAME_VERSION = when (context.packageName) {
@@ -28,8 +27,6 @@ class GameVersionChecker {
                 Log.e(TAG, LOG_INCORRECT_PACKAGE)
             }
             NativeBridge.setGameVersion(GAME_VERSION)
-            val saveFilePath = context.filesDir.toString() + SAVE_FILE_NAME
-            NativeBridge.setSaveFilePath(saveFilePath)
         }
 
         val isDebug: Boolean

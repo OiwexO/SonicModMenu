@@ -1,8 +1,9 @@
-package com.iwex.sonicmodmenu.app.viewmodel
+package com.iwex.sonicmodmenu.presentation.viewmodel
 
-import com.iwex.sonicmodmenu.app.NativeBridge
+import androidx.lifecycle.ViewModel
+import com.iwex.sonicmodmenu.NativeBridge
 
-class GameTabViewModel {
+class GameTabViewModel : ViewModel() {
     fun onScoreChange(score: Int) {
         NativeBridge.setScore(score)
     }

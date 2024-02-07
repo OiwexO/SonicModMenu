@@ -38,7 +38,22 @@ void *NativeBridge::cheatThread(void *) {
 }
 
 void NativeBridge::setGameVersion(JNIEnv *, jobject, jint gameVersion) {
-    GlobalSettings::IS_DEBUG = (gameVersion == VERSION_INCORRECT) || (gameVersion == VERSION_DEBUG);
+    GameVersions version = static_cast<GameVersions>(gameVersion);
+    switch (version) {
+        case GameVersions::DEBUG:
+            GlobalSettings::IS_DEBUG = true;
+            GlobalSettings::GAME_VERSION = GameVersions::DEBUG;
+            break;
+        case GameVersions::SONIC_1:
+        case GameVersions::SONIC_2:
+            GlobalSettings::IS_DEBUG = false;
+            GlobalSettings::GAME_VERSION = version;
+            break;
+        default:
+            GlobalSettings::IS_DEBUG = true;
+            GlobalSettings::GAME_VERSION = GameVersions::INCORRECT;
+            break;
+    }
 }
 
 void NativeBridge::setScore(JNIEnv *, jobject, jint score) {
@@ -132,9 +147,16 @@ void NativeBridge::setSaveFilePath(JNIEnv *env, jobject, jstring saveFilePathJvm
     char *saveFilePath = new char[saveFilePathLength + 1];
     env->GetStringUTFRegion(saveFilePathJvm, 0, saveFilePathLength, saveFilePath);
     saveFilePath[saveFilePathLength] = '\0';
-    MemoryManager::SaveEditor::setSaveFilePath(saveFilePath);
+    const char *filename = "/SGame.bin";
+    size_t arraySize = saveFilePathLength + strlen(filename) + 1;
+    char *completePath = new char[arraySize];
+    strcpy(completePath, saveFilePath);
+    strcat(completePath, filename);
+    MemoryManager::SaveEditor::setSaveFilePath(completePath);
+    delete[] saveFilePath;
+    delete[] completePath;
     if (GlobalSettings::IS_DEBUG) {
-        LOGD(TAG, "save file path: %s", saveFilePath);
+        LOGD(TAG, "save file path: %s", completePath);
     }
 }
 

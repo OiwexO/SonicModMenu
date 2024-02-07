@@ -1,4 +1,4 @@
-package com.iwex.sonicmodmenu.app.util
+package com.iwex.sonicmodmenu.util
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -82,6 +82,7 @@ class MenuWidgetFactory {
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                         textViewLabel.text = String.format(
+                            "%s: %s",
                             label,
                             if (isTextLabel) textLabelValues!![progress] else progress
                         )
@@ -103,7 +104,7 @@ class MenuWidgetFactory {
             parent: ViewGroup
         ): TextView {
             return TextView(context).apply {
-                text = String.format(label, value)
+                text = String.format("%s: %s", label, value)
                 setTextColor(MenuDesign.Colors.MAIN)
                 parent.addView(this)
             }
@@ -113,7 +114,7 @@ class MenuWidgetFactory {
             label: String,
             addMargin: Boolean,
             context: Context,
-            parent: ViewGroup
+            parent: ViewGroup?
         ): Button {
             return Button(context).apply {
                 text = label
@@ -127,7 +128,7 @@ class MenuWidgetFactory {
                 background = getButtonBackground()
                 setTextColor(MenuDesign.Colors.BUTTON_TEXT)
                 gravity = Gravity.CENTER
-                parent.addView(this)
+                parent?.addView(this)
             }
         }
 
@@ -164,7 +165,7 @@ class MenuWidgetFactory {
         ): Button {
             val linearLayout = LinearLayout(context)
             val widgetButton = Button(context).apply {
-                text = String.format("%s%d", label, 0)
+                text = String.format("%s: %d", label, 0)
                 isAllCaps = false
                 layoutParams = LinearLayout.LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
@@ -179,11 +180,12 @@ class MenuWidgetFactory {
                         label,
                         maxValue,
                         { inputNumber ->
-                            text = if (isBinary) {
-                                String.format("%s%s", label, Integer.toBinaryString(inputNumber))
+                            val formattedNumber = if (isBinary) {
+                                Integer.toBinaryString(inputNumber)
                             } else {
-                                String.format("%s%d", label, inputNumber)
+                                inputNumber.toString()
                             }
+                            text = String.format("%s: %s", label, formattedNumber)
                             onInputChangedListener(inputNumber)
                         },
                         isBinary

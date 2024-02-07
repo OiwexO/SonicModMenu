@@ -1,17 +1,14 @@
-package com.iwex.sonicmodmenu.app.view
+package com.iwex.sonicmodmenu.presentation.view
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.core.view.setPadding
-import com.iwex.sonicmodmenu.app.service.ModService
-import com.iwex.sonicmodmenu.app.util.MenuDesign
-import com.iwex.sonicmodmenu.app.util.MenuWidgetFactory
+import com.iwex.sonicmodmenu.presentation.service.ModService
+import com.iwex.sonicmodmenu.util.MenuWidgetFactory
 
-class OtherTabLayout(context: Context) : LinearLayout(context) {
+class OtherTab(context: Context) : BaseMenuTab(context) {
     private val openYouTubeChannelButton: Button
     private val openGithubRepositoryButton: Button
     private val exitButton: Button
@@ -27,9 +24,6 @@ class OtherTabLayout(context: Context) : LinearLayout(context) {
     }
 
     init {
-        orientation = VERTICAL
-        setBackgroundColor(MenuDesign.Colors.TAB_BACKGROUND)
-        setPadding(MenuDesign.Measurements.TAB_PADDING)
         openYouTubeChannelButton = MenuWidgetFactory.addButton(
             LABEL_OPEN_YOUTUBE_CHANNEL_BUTTON,
             true,

@@ -1,4 +1,4 @@
-package com.iwex.sonicmodmenu.app.util
+package com.iwex.sonicmodmenu.util
 import android.content.Context
 import android.graphics.Color
 import android.util.DisplayMetrics

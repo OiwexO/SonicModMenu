@@ -20,12 +20,6 @@ endif()
 # Enables/disables logs
 add_definitions(-DENABLE_LOGS)
 
-# Defines which game memory offsets to use. Only one of these definitions should be left uncommented
-add_definitions(-DSONIC_1)
-#add_definitions(-DSONIC_2)
-#add_definitions(-DSONIC_3)
-#add_definitions(-DSONIC_CD)
-
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.

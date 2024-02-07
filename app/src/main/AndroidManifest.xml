@@ -16,15 +16,15 @@
         android:theme="@style/Theme.SonicModMenu"
         tools:targetApi="31">
         <service
-            android:name=".app.service.ModService"
+            android:name=".presentation.service.ModService"
             android:enabled="true"
             android:exported="false" />
 
         <activity
-            android:name=".app.LauncherActivity"
+            android:name=".presentation.LauncherActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

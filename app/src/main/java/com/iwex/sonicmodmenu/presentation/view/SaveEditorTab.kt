@@ -1,21 +1,18 @@
-package com.iwex.sonicmodmenu.app.view
+package com.iwex.sonicmodmenu.presentation.view
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.core.view.setPadding
-import com.iwex.sonicmodmenu.app.util.GameVersionChecker
-import com.iwex.sonicmodmenu.app.util.MenuDesign
-import com.iwex.sonicmodmenu.app.util.MenuWidgetFactory
-import com.iwex.sonicmodmenu.app.viewmodel.SaveEditorTabViewModel
+import com.iwex.sonicmodmenu.presentation.viewmodel.SaveEditorTabViewModel
+import com.iwex.sonicmodmenu.util.GameVersionChecker
+import com.iwex.sonicmodmenu.util.MenuWidgetFactory
 
 @SuppressLint("ViewConstructor")
-class SaveEditorTabLayout(
+class SaveEditorTab(
     context: Context, private val viewModel: SaveEditorTabViewModel
-) : LinearLayout(context) {
+) : BaseMenuTab(context) {
 
     private val saveSlotSeekbar: SeekBar
     private val characterSeekbar: SeekBar
@@ -27,13 +24,13 @@ class SaveEditorTabLayout(
     private val editSlotButton: Button
 
     companion object {
-        private const val LABEL_SAVE_SLOT = "save slot: %d"
-        private const val LABEL_CHARACTER = "character: %s"
-        private const val LABEL_LIVES = "lives:"
-        private const val LABEL_SCORE = "score:"
-        private const val LABEL_BONUS_SCORE = "bonus score:"
-        private const val LABEL_STAGE = "stage:"
-        private const val LABEL_EMERALDS = "emeralds:"
+        private const val LABEL_SAVE_SLOT = "save slot"
+        private const val LABEL_CHARACTER = "character"
+        private const val LABEL_LIVES = "lives"
+        private const val LABEL_SCORE = "score"
+        private const val LABEL_BONUS_SCORE = "bonus score"
+        private const val LABEL_STAGE = "stage"
+        private const val LABEL_EMERALDS = "emeralds"
         private const val LABEL_EDIT_SLOT = "EDIT SLOT"
         private const val TOAST_ON_SUCCESS = "Save file has been edited successfully"
         private const val TOAST_ON_FAILURE = "An error occurred while editing save file"
@@ -52,10 +49,6 @@ class SaveEditorTabLayout(
     }
 
     init {
-        orientation = VERTICAL
-        setBackgroundColor(MenuDesign.Colors.TAB_BACKGROUND)
-        setPadding(MenuDesign.Measurements.TAB_PADDING)
-
         saveSlotSeekbar = MenuWidgetFactory.addSeekBar(
             LABEL_SAVE_SLOT,
             MAX_SAVE_SLOT,
@@ -134,15 +127,14 @@ class SaveEditorTabLayout(
 
     }
 
-    @SuppressLint("SetTextI18n")
     private fun readSaveSlot(slotIndex: Int) {
         val saveSlotState = viewModel.onSaveSlotChange(slotIndex)
         characterSeekbar.progress = saveSlotState.character
-        livesInput.text = LABEL_LIVES + saveSlotState.lives
-        scoreInput.text = LABEL_SCORE + saveSlotState.score
-        bonusScoreInput.text = LABEL_BONUS_SCORE + saveSlotState.bonusScore
-        stageInput.text = LABEL_STAGE + saveSlotState.stage
-        emeraldsInput.text = LABEL_EMERALDS + saveSlotState.emeralds
+        livesInput.text = String.format("%s: %d", LABEL_LIVES, saveSlotState.lives)
+        scoreInput.text = String.format("%s: %d", LABEL_SCORE, saveSlotState.score)
+        bonusScoreInput.text = String.format("%s: %d", LABEL_BONUS_SCORE, saveSlotState.bonusScore)
+        stageInput.text = String.format("%s: %d", LABEL_STAGE, saveSlotState.stage)
+        emeraldsInput.text = String.format("%s: %d", LABEL_EMERALDS, saveSlotState.emeralds)
     }
 
 }

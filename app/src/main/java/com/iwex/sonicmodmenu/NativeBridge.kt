@@ -1,4 +1,4 @@
-package com.iwex.sonicmodmenu.app
+package com.iwex.sonicmodmenu
 
 @Suppress("KotlinJniMissingFunction")
 class NativeBridge {

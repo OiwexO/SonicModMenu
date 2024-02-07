@@ -4,7 +4,7 @@
 
 /* CLASS NAMES ===================================================================================*/
 
-#define CLASS_NATIVE_BRIDGE_KOTLIN "com/iwex/sonicmodmenu/app/NativeBridge$Companion"
+#define CLASS_NATIVE_BRIDGE_KOTLIN "com/iwex/sonicmodmenu/NativeBridge$Companion"
 
 /*================================================================================================*/
 

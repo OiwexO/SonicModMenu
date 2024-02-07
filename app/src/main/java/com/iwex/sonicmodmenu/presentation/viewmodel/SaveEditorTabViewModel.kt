@@ -1,8 +1,8 @@
-package com.iwex.sonicmodmenu.app.viewmodel
+package com.iwex.sonicmodmenu.presentation.viewmodel
 
-import com.iwex.sonicmodmenu.app.NativeBridge
-import com.iwex.sonicmodmenu.app.model.SaveSlot
-import com.iwex.sonicmodmenu.app.model.asIntArray
+import com.iwex.sonicmodmenu.NativeBridge
+import com.iwex.sonicmodmenu.domain.model.SaveSlot
+import com.iwex.sonicmodmenu.domain.model.toIntArray
 
 class SaveEditorTabViewModel {
     private var saveSlotIndex = 0
@@ -10,9 +10,9 @@ class SaveEditorTabViewModel {
 
     fun onSaveSlotChange(slotIndex: Int): SaveSlot {
         saveSlotIndex = slotIndex
-        val saveSlotData = NativeBridge.readSaveFile(slotIndex)
-        saveSlot = SaveSlot(saveSlotData)
-        return saveSlot.copy()
+        val saveSlotArray = NativeBridge.readSaveFile(saveSlotIndex)
+        saveSlot = SaveSlot(saveSlotArray)
+        return saveSlot
     }
 
     fun onCharacterChange(character: Int) {
@@ -40,7 +40,7 @@ class SaveEditorTabViewModel {
     }
 
     fun editSlot(): Boolean {
-        val saveSlotData = saveSlot.asIntArray()
+        val saveSlotData = saveSlot.toIntArray()
         return NativeBridge.writeSaveFile(saveSlotIndex, saveSlotData)
     }
 

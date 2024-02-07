@@ -1,4 +1,4 @@
-package com.iwex.sonicmodmenu.app.model
+package com.iwex.sonicmodmenu.domain.model
 
 data class SaveSlot(
     val character: Int = 0,
@@ -18,7 +18,7 @@ data class SaveSlot(
     )
 }
 
-fun SaveSlot.asIntArray(): IntArray {
+fun SaveSlot.toIntArray(): IntArray {
     return intArrayOf(
         character,
         lives,
