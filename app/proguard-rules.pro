@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class com.iwex.sonicmodmenu.domain.NativeBridge$Companion { *; }
+-keep class com.iwex.sonicmodmenu.presentation.activity.LauncherActivity$Companion { *; }
+-keepclassmembers class com.iwex.sonicmodmenu.presentation.activity.LauncherActivity {
+    public static ** Companion;
+}

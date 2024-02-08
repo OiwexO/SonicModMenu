@@ -37,7 +37,8 @@ void *NativeBridge::cheatThread(void *) {
     return nullptr;
 }
 
-void NativeBridge::setGameVersion(JNIEnv *, jobject, jint gameVersion) {
+JNIEXPORT void JNICALL
+NativeBridge::setGameVersion(JNIEnv *, jobject, jint gameVersion) {
     GameVersion version = static_cast<GameVersion>(gameVersion);
     switch (version) {
         case GameVersion::DEBUG:
@@ -57,7 +58,8 @@ void NativeBridge::setGameVersion(JNIEnv *, jobject, jint gameVersion) {
     startCheatThread();
 }
 
-void NativeBridge::setScore(JNIEnv *, jobject, jint score) {
+JNIEXPORT void JNICALL
+NativeBridge::setScore(JNIEnv *, jobject, jint score) {
     if (GlobalSettings::IS_DEBUG) {
         LOGD(TAG, "setScore: %d", score);
     } else {
@@ -65,7 +67,8 @@ void NativeBridge::setScore(JNIEnv *, jobject, jint score) {
     }
 }
 
-void NativeBridge::setLives(JNIEnv *, jobject, jint lives) {
+JNIEXPORT void JNICALL
+NativeBridge::setLives(JNIEnv *, jobject, jint lives) {
     if (GlobalSettings::IS_DEBUG) {
         LOGD(TAG, "setLives: %d", lives);
     } else {
@@ -73,7 +76,8 @@ void NativeBridge::setLives(JNIEnv *, jobject, jint lives) {
     }
 }
 
-void NativeBridge::setRings(JNIEnv *, jobject, jint rings) {
+JNIEXPORT void JNICALL
+NativeBridge::setRings(JNIEnv *, jobject, jint rings) {
     if (GlobalSettings::IS_DEBUG) {
         LOGD(TAG, "setRings: %d", rings);
     } else {
@@ -81,7 +85,8 @@ void NativeBridge::setRings(JNIEnv *, jobject, jint rings) {
     }
 }
 
-void NativeBridge::setShield(JNIEnv *, jobject, jboolean value) {
+JNIEXPORT void JNICALL
+NativeBridge::setShield(JNIEnv *, jobject, jboolean value) {
     GlobalSettings::isShieldEnabled = value;
     if (GlobalSettings::IS_DEBUG) {
         LOGD(TAG, "enableShield: %d", value);
@@ -92,7 +97,8 @@ void NativeBridge::setShield(JNIEnv *, jobject, jboolean value) {
     }
 }
 
-void NativeBridge::setInvincibility(JNIEnv *, jobject, jboolean value) {
+JNIEXPORT void JNICALL
+NativeBridge::setInvincibility(JNIEnv *, jobject, jboolean value) {
     GlobalSettings::isInvincibilityEnabled = value;
     if (GlobalSettings::IS_DEBUG) {
         LOGD(TAG, "enableInvincibility: %d", value);
@@ -103,7 +109,8 @@ void NativeBridge::setInvincibility(JNIEnv *, jobject, jboolean value) {
     }
 }
 
-void NativeBridge::setSuperForm(JNIEnv *, jobject, jboolean value) {
+JNIEXPORT void JNICALL
+NativeBridge::setSuperForm(JNIEnv *, jobject, jboolean value) {
     GlobalSettings::isSuperFormEnabled = value;
     if (GlobalSettings::IS_DEBUG) {
         LOGD(TAG, "enableSuperForm: %d", value);
@@ -114,7 +121,8 @@ void NativeBridge::setSuperForm(JNIEnv *, jobject, jboolean value) {
     }
 }
 
-void NativeBridge::setSaveFilePath(JNIEnv *env, jobject, jstring saveFilePathJvm) {
+JNIEXPORT void JNICALL
+NativeBridge::setSaveFilePath(JNIEnv *env, jobject, jstring saveFilePathJvm) {
     jsize saveFilePathLength = env->GetStringUTFLength(saveFilePathJvm);
     char *saveFilePath = new char[saveFilePathLength + 1];
     env->GetStringUTFRegion(saveFilePathJvm, 0, saveFilePathLength, saveFilePath);
@@ -132,7 +140,8 @@ void NativeBridge::setSaveFilePath(JNIEnv *env, jobject, jstring saveFilePathJvm
     }
 }
 
-jintArray NativeBridge::readSaveFile(JNIEnv *env, jobject, jint slotIndex) {
+JNIEXPORT jintArray JNICALL
+NativeBridge::readSaveFile(JNIEnv *env, jobject, jint slotIndex) {
     int *saveSlotData = MemoryManager::SaveEditor::readSaveFile(slotIndex);
     jintArray saveSlotDataJvm = env->NewIntArray(MemoryManager::SaveEditor::SAVE_DATA_SIZE);
     env->SetIntArrayRegion(
@@ -145,7 +154,8 @@ jintArray NativeBridge::readSaveFile(JNIEnv *env, jobject, jint slotIndex) {
     return saveSlotDataJvm;
 }
 
-jboolean NativeBridge::writeSaveFile(JNIEnv *env, jobject, jint slotIndex, jintArray saveSlotDataJvm) {
+JNIEXPORT jboolean JNICALL
+NativeBridge::writeSaveFile(JNIEnv *env, jobject, jint slotIndex, jintArray saveSlotDataJvm) {
     int *saveSlotData = new int[MemoryManager::SaveEditor::SAVE_DATA_SIZE]{};
     env->GetIntArrayRegion(
             saveSlotDataJvm,
@@ -166,7 +176,8 @@ void NativeBridge::startCheatThread() {
     pthread_create(&thread, nullptr, cheatThread, nullptr);
 }
 
-void NativeBridge::exitThread(JNIEnv *, jobject) {
+JNIEXPORT void JNICALL
+NativeBridge::exitThread(JNIEnv *, jobject) {
     isShouldRunThread = false;
 }
 

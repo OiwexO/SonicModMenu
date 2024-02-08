@@ -42,6 +42,11 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 
         )
 
+# sets default symbols visibility to hidden
+# don't forget to mark exported symbols with JNIEXPORT and JNICALL
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES CXX_VISIBILITY_PRESET hidden)
+
+
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
 # build script, prebuilt third-party libraries, or Android system libraries.
