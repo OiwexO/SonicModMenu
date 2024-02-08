@@ -31,7 +31,7 @@ bool MemoryManager::initialize() {
         gameModuleBase = findModuleBase("libRetroEngineJNI");
         sleep(1);
     }
-    GameManager::initialize(gameModuleBase);
+    GameManager::initialize(gameModuleBase, GlobalSettings::GAME_VERSION);
     _isInitialized = true;
     return true;
 }

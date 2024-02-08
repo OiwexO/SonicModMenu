@@ -6,12 +6,13 @@ import android.os.IBinder
 import android.view.WindowManager
 import android.widget.Toast
 import com.iwex.sonicmodmenu.presentation.view.FloatingMenu
-import com.iwex.sonicmodmenu.presentation.view.GameTab
-import com.iwex.sonicmodmenu.presentation.view.OtherTab
-import com.iwex.sonicmodmenu.presentation.view.SaveEditorTab
+import com.iwex.sonicmodmenu.presentation.view.menuTabs.GameTab
+import com.iwex.sonicmodmenu.presentation.view.menuTabs.OtherTab
+import com.iwex.sonicmodmenu.presentation.view.menuTabs.SaveEditorTab
 import com.iwex.sonicmodmenu.presentation.viewmodel.GameTabViewModel
 import com.iwex.sonicmodmenu.presentation.viewmodel.SaveEditorTabViewModel
-import com.iwex.sonicmodmenu.util.FloatingMenuTouchListener
+import com.iwex.sonicmodmenu.presentation.view.FloatingMenuTouchListener
+import com.iwex.sonicmodmenu.presentation.resource.Dimensions
 
 class ModService : Service() {
 
@@ -44,7 +45,8 @@ class ModService : Service() {
         val floatingMenu = FloatingMenu(this, gameTab, saveEditorTab, otherTab)
         floatingMenu.setOnTouchListener(
             FloatingMenuTouchListener(
-                floatingMenu.layoutParams
+                floatingMenu.layoutParams,
+                Dimensions.getInstance(this).scaledTouchSlop
             ) { view, layoutParams -> windowManager.updateViewLayout(view, layoutParams) }
         )
         windowManager.addView(floatingMenu, floatingMenu.layoutParams)

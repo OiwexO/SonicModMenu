@@ -1,6 +1,6 @@
 package com.iwex.sonicmodmenu.presentation.viewmodel
 
-import com.iwex.sonicmodmenu.NativeBridge
+import com.iwex.sonicmodmenu.domain.NativeBridge
 import com.iwex.sonicmodmenu.domain.model.SaveSlot
 import com.iwex.sonicmodmenu.domain.model.toIntArray
 

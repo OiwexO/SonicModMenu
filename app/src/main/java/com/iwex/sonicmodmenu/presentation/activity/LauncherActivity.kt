@@ -1,4 +1,4 @@
-package com.iwex.sonicmodmenu.presentation
+package com.iwex.sonicmodmenu.presentation.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -10,10 +10,9 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
-import com.iwex.sonicmodmenu.NativeBridge
+import com.iwex.sonicmodmenu.domain.NativeBridge
 import com.iwex.sonicmodmenu.presentation.service.ModService
 import com.iwex.sonicmodmenu.util.GameVersionChecker
-import com.iwex.sonicmodmenu.util.MenuDesign
 
 class LauncherActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,9 +66,8 @@ class LauncherActivity : Activity() {
                 Log.e(TAG, LOG_WRONG_CONTEXT)
                 return
             }
+            GameVersionChecker.initGameVersion(context.packageName)
             NativeBridge.setSaveFilePath(context.filesDir.toString())
-            GameVersionChecker.initGameVersion(context)
-            MenuDesign.initDisplayMetrics(context)
             val intent = Intent(context, LauncherActivity::class.java)
             context.startActivity(intent)
         }

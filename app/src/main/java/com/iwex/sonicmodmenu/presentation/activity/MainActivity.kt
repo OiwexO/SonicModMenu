@@ -1,4 +1,4 @@
-package com.iwex.sonicmodmenu.presentation
+package com.iwex.sonicmodmenu.presentation.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

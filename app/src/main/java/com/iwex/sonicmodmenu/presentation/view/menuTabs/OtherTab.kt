@@ -1,4 +1,4 @@
-package com.iwex.sonicmodmenu.presentation.view
+package com.iwex.sonicmodmenu.presentation.view.menuTabs
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,7 @@ import android.net.Uri
 import android.widget.Button
 import android.widget.Toast
 import com.iwex.sonicmodmenu.presentation.service.ModService
-import com.iwex.sonicmodmenu.util.MenuWidgetFactory
+import com.iwex.sonicmodmenu.presentation.MenuWidgetFactory
 
 class OtherTab(context: Context) : BaseMenuTab(context) {
     private val openYouTubeChannelButton: Button

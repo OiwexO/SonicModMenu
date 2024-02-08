@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "../data/GlobalSettings.h"
+
 using ADDRESS = unsigned int;
 
 class MemoryManager {
@@ -39,7 +41,7 @@ public:
 		static ADDRESS superForm;
 
 	public:
-		static void initialize(ADDRESS _gameModuleBase);
+		static void initialize(ADDRESS _gameModuleBase, GameVersion gameVersion);
 		static void setScore(int scoreValue);
 		static void setLives(int livesValue);
 		static void setRings(int ringsValue);

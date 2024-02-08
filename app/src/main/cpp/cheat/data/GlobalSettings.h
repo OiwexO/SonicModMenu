@@ -3,7 +3,7 @@
 #pragma once
 #include <jni.h>
 
-enum GameVersions {
+enum GameVersion {
     INCORRECT = -1,
     DEBUG = 0,
     SONIC_1 = 1,
@@ -13,8 +13,8 @@ enum GameVersions {
 class GlobalSettings {
 
 public:
+    static GameVersion GAME_VERSION;
     static bool IS_DEBUG;
-    static GameVersions GAME_VERSION;
     static bool isShieldEnabled;
     static bool isInvincibilityEnabled;
     static bool isSuperFormEnabled;

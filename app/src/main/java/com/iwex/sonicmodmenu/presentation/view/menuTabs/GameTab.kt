@@ -1,11 +1,11 @@
-package com.iwex.sonicmodmenu.presentation.view
+package com.iwex.sonicmodmenu.presentation.view.menuTabs
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Button
 import android.widget.Switch
 import com.iwex.sonicmodmenu.presentation.viewmodel.GameTabViewModel
-import com.iwex.sonicmodmenu.util.MenuWidgetFactory
+import com.iwex.sonicmodmenu.presentation.MenuWidgetFactory
 
 @SuppressLint("UseSwitchCompatOrMaterialCode", "ViewConstructor")
 class GameTab(

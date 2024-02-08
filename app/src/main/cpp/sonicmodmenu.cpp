@@ -11,6 +11,5 @@ JNI_OnLoad(JavaVM *vm, void *) {
     if (NativeBridge::registerNativeMethods(env) != JNI_OK) {
         return JNI_ERR;
     }
-    NativeBridge::startCheatThread();
     return JNI_VERSION_1_6;
 }

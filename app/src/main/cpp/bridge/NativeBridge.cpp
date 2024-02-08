@@ -38,22 +38,23 @@ void *NativeBridge::cheatThread(void *) {
 }
 
 void NativeBridge::setGameVersion(JNIEnv *, jobject, jint gameVersion) {
-    GameVersions version = static_cast<GameVersions>(gameVersion);
+    GameVersion version = static_cast<GameVersion>(gameVersion);
     switch (version) {
-        case GameVersions::DEBUG:
+        case GameVersion::DEBUG:
             GlobalSettings::IS_DEBUG = true;
-            GlobalSettings::GAME_VERSION = GameVersions::DEBUG;
+            GlobalSettings::GAME_VERSION = GameVersion::DEBUG;
             break;
-        case GameVersions::SONIC_1:
-        case GameVersions::SONIC_2:
+        case GameVersion::SONIC_1:
+        case GameVersion::SONIC_2:
             GlobalSettings::IS_DEBUG = false;
             GlobalSettings::GAME_VERSION = version;
             break;
         default:
             GlobalSettings::IS_DEBUG = true;
-            GlobalSettings::GAME_VERSION = GameVersions::INCORRECT;
+            GlobalSettings::GAME_VERSION = GameVersion::INCORRECT;
             break;
     }
+    startCheatThread();
 }
 
 void NativeBridge::setScore(JNIEnv *, jobject, jint score) {
@@ -113,6 +114,24 @@ void NativeBridge::setSuperForm(JNIEnv *, jobject, jboolean value) {
     }
 }
 
+void NativeBridge::setSaveFilePath(JNIEnv *env, jobject, jstring saveFilePathJvm) {
+    jsize saveFilePathLength = env->GetStringUTFLength(saveFilePathJvm);
+    char *saveFilePath = new char[saveFilePathLength + 1];
+    env->GetStringUTFRegion(saveFilePathJvm, 0, saveFilePathLength, saveFilePath);
+    saveFilePath[saveFilePathLength] = '\0';
+    const char *filename = "/SGame.bin";
+    size_t arraySize = saveFilePathLength + strlen(filename) + 1;
+    char *completePath = new char[arraySize];
+    strcpy(completePath, saveFilePath);
+    strcat(completePath, filename);
+    MemoryManager::SaveEditor::setSaveFilePath(completePath);
+    delete[] saveFilePath;
+    delete[] completePath;
+    if (GlobalSettings::IS_DEBUG) {
+        LOGD(TAG, "save file path: %s", completePath);
+    }
+}
+
 jintArray NativeBridge::readSaveFile(JNIEnv *env, jobject, jint slotIndex) {
     int *saveSlotData = MemoryManager::SaveEditor::readSaveFile(slotIndex);
     jintArray saveSlotDataJvm = env->NewIntArray(MemoryManager::SaveEditor::SAVE_DATA_SIZE);
@@ -142,22 +161,9 @@ jboolean NativeBridge::writeSaveFile(JNIEnv *env, jobject, jint slotIndex, jintA
     return isWrittenSuccessfully;
 }
 
-void NativeBridge::setSaveFilePath(JNIEnv *env, jobject, jstring saveFilePathJvm) {
-    jsize saveFilePathLength = env->GetStringUTFLength(saveFilePathJvm);
-    char *saveFilePath = new char[saveFilePathLength + 1];
-    env->GetStringUTFRegion(saveFilePathJvm, 0, saveFilePathLength, saveFilePath);
-    saveFilePath[saveFilePathLength] = '\0';
-    const char *filename = "/SGame.bin";
-    size_t arraySize = saveFilePathLength + strlen(filename) + 1;
-    char *completePath = new char[arraySize];
-    strcpy(completePath, saveFilePath);
-    strcat(completePath, filename);
-    MemoryManager::SaveEditor::setSaveFilePath(completePath);
-    delete[] saveFilePath;
-    delete[] completePath;
-    if (GlobalSettings::IS_DEBUG) {
-        LOGD(TAG, "save file path: %s", completePath);
-    }
+void NativeBridge::startCheatThread() {
+    pthread_t thread;
+    pthread_create(&thread, nullptr, cheatThread, nullptr);
 }
 
 void NativeBridge::exitThread(JNIEnv *, jobject) {
@@ -182,11 +188,10 @@ int NativeBridge::registerNativeMethods(JNIEnv *env) {
             {METHOD_SET_SHIELD,         SIG_SET_SHIELD,         reinterpret_cast<void *>(NativeBridge::setShield)},
             {METHOD_SET_INVINCIBILITY,  SIG_SET_INVINCIBILITY,  reinterpret_cast<void *>(NativeBridge::setInvincibility)},
             {METHOD_SET_SUPER_FORM,     SIG_SET_SUPER_FORM,     reinterpret_cast<void *>(NativeBridge::setSuperForm)},
+            {METHOD_SET_SAVE_FILE_PATH, SIG_SET_SAVE_FILE_PATH, reinterpret_cast<void *>(NativeBridge::setSaveFilePath)},
             {METHOD_READ_SAVE_FILE,     SIG_READ_SAVE_FILE,     reinterpret_cast<void *>(NativeBridge::readSaveFile)},
             {METHOD_WRITE_SAVE_FILE,    SIG_WRITE_SAVE_FILE,    reinterpret_cast<void *>(NativeBridge::writeSaveFile)},
-            {METHOD_SET_SAVE_FILE_PATH, SIG_SET_SAVE_FILE_PATH, reinterpret_cast<void *>(NativeBridge::setSaveFilePath)},
             {METHOD_EXIT_THREAD,        SIG_EXIT_THREAD,        reinterpret_cast<void *>(NativeBridge::exitThread)}
-
     };
     int nMethods = (sizeof(methods) / sizeof(methods[0]));
     int registrationResult = env->RegisterNatives(kotlinNativeBridgeClass, methods, nMethods);
@@ -195,9 +200,4 @@ int NativeBridge::registerNativeMethods(JNIEnv *env) {
         return JNI_ERR;
     }
     return JNI_OK;
-}
-
-void NativeBridge::startCheatThread() {
-    pthread_t thread;
-    pthread_create(&thread, nullptr, cheatThread, nullptr);
 }

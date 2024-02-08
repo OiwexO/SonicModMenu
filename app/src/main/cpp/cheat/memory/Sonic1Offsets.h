@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Offsets {
+namespace Sonic1Offsets {
 	using OFFSET = unsigned int;
 
 	constexpr OFFSET Score = 0x2545154;

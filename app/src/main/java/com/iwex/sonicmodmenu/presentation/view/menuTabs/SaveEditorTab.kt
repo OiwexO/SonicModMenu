@@ -1,4 +1,4 @@
-package com.iwex.sonicmodmenu.presentation.view
+package com.iwex.sonicmodmenu.presentation.view.menuTabs
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,7 +7,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import com.iwex.sonicmodmenu.presentation.viewmodel.SaveEditorTabViewModel
 import com.iwex.sonicmodmenu.util.GameVersionChecker
-import com.iwex.sonicmodmenu.util.MenuWidgetFactory
+import com.iwex.sonicmodmenu.presentation.MenuWidgetFactory
 
 @SuppressLint("ViewConstructor")
 class SaveEditorTab(

@@ -1,23 +1,22 @@
 package com.iwex.sonicmodmenu.util
 
-import android.content.Context
 import android.util.Log
-import com.iwex.sonicmodmenu.NativeBridge
+import com.iwex.sonicmodmenu.domain.NativeBridge
 
 class GameVersionChecker {
     companion object {
         private const val TAG = "GameVersionChecker.kt"
         private const val PACKAGE_DEBUG = "com.iwex.sonicmodmenu"
         private const val PACKAGE_SONIC1 = "com.sega.sonic1px"
-        private const val PACKAGE_SONIC2 = "com.sega.sonic2px"
+        private const val PACKAGE_SONIC2 = "com.sega.sonic2.runner"
         private const val VERSION_INCORRECT = -1
         private const val VERSION_DEBUG = 0
         private const val VERSION_SONIC1 = 1
         private const val VERSION_SONIC2 = 2
         private const val LOG_INCORRECT_PACKAGE = "Incorrect app's package name! Mod will not work correctly"
         private var GAME_VERSION = VERSION_INCORRECT
-        fun initGameVersion(context: Context) {
-            GAME_VERSION = when (context.packageName) {
+        fun initGameVersion(packageName: String) {
+            GAME_VERSION = when (packageName) {
                 PACKAGE_DEBUG -> VERSION_DEBUG
                 PACKAGE_SONIC1 -> VERSION_SONIC1
                 PACKAGE_SONIC2 -> VERSION_SONIC2

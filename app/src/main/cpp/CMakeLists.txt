@@ -12,11 +12,6 @@ cmake_minimum_required(VERSION 3.22.1)
 # build script scope).
 project("sonicmodmenu")
 
-# used for mocking data in debug builds
-if (${CMAKE_BUILD_TYPE} MATCHES "Debug")
-    add_definitions(-DBUILD_TYPE_DEBUG)
-endif()
-
 # Enables/disables logs
 add_definitions(-DENABLE_LOGS)
 

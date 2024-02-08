@@ -18,8 +18,11 @@ import android.widget.RelativeLayout.LayoutParams.MATCH_PARENT
 import android.widget.ScrollView
 import androidx.core.view.isVisible
 import androidx.core.view.setMargins
-import com.iwex.sonicmodmenu.util.MenuDesign
-import com.iwex.sonicmodmenu.util.MenuWidgetFactory
+import com.iwex.sonicmodmenu.presentation.MenuWidgetFactory
+import com.iwex.sonicmodmenu.presentation.resource.Colors
+import com.iwex.sonicmodmenu.presentation.resource.Dimensions
+import com.iwex.sonicmodmenu.presentation.resource.FloatingIcon
+import com.iwex.sonicmodmenu.presentation.view.menuTabs.BaseMenuTab
 
 @SuppressLint("ViewConstructor")
 class FloatingMenu(
@@ -28,7 +31,7 @@ class FloatingMenu(
     private val saveEditorTab: BaseMenuTab,
     private val otherTab: BaseMenuTab
 ) : RelativeLayout(context) {
-    val layoutParams = initLayoutParams()
+    val layoutParams = initLayoutParams(context)
     private val floatingIconView = initFloatingIconView(context)
     private val floatingMenuLayout = initFloatingMenuLayout(context)
     private val tabHolderScrollView = initTabHolderScrollView(context)
@@ -71,14 +74,14 @@ class FloatingMenu(
         }
     }
 
-    private fun initLayoutParams(): WindowManager.LayoutParams {
+    private fun initLayoutParams(context: Context): WindowManager.LayoutParams {
         val windowType =
             if (Build.VERSION.SDK_INT >= 26) TYPE_APPLICATION_OVERLAY else TYPE_APPLICATION
         return WindowManager.LayoutParams(
             WRAP_CONTENT,
             WRAP_CONTENT,
-            MenuDesign.Measurements.MENU_POS_X,
-            MenuDesign.Measurements.MENU_POS_Y,
+            Dimensions.getInstance(context).iconPositionX,
+            Dimensions.getInstance(context).iconPositionY,
             windowType,
             FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT
@@ -86,11 +89,11 @@ class FloatingMenu(
     }
 
     private fun initFloatingIconView(context: Context): ImageView {
-        val decoded: ByteArray = Base64.decode(MenuDesign.FLOATING_ICON_BASE64, 0)
+        val decoded: ByteArray = Base64.decode(FloatingIcon.BASE64_ENCODED_ICON, Base64.DEFAULT)
         return ImageView(context).apply {
             layoutParams = LayoutParams(
-                MenuDesign.Measurements.ICON_SIZE,
-                MenuDesign.Measurements.ICON_SIZE
+                Dimensions.getInstance(context).iconSizePx,
+                Dimensions.getInstance(context).iconSizePx
             )
             scaleType = ImageView.ScaleType.FIT_XY
             setImageBitmap(BitmapFactory.decodeByteArray(decoded, 0, decoded.size))
@@ -101,10 +104,10 @@ class FloatingMenu(
         return LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             layoutParams = LayoutParams(
-                MenuDesign.Measurements.MENU_WIDTH,
-                MenuDesign.Measurements.MENU_HEIGHT
+                Dimensions.getInstance(context).menuWidthPx,
+                Dimensions.getInstance(context).menuHeightPx
             )
-            setBackgroundColor(MenuDesign.Colors.MENU_BACKGROUND)
+            setBackgroundColor(Colors.MENU_BACKGROUND)
             MenuWidgetFactory.addTitle(LABEL_MENU_TITLE, context, this)
             visibility = GONE
         }
@@ -113,7 +116,7 @@ class FloatingMenu(
     private fun initTabHolderScrollView(context: Context): ScrollView {
         return ScrollView(context).apply {
             layoutParams = LayoutParams(MATCH_PARENT, 0, 1f).apply {
-                setMargins(MenuDesign.Measurements.BUTTON_MARGIN)
+                setMargins(Dimensions.getInstance(context).buttonMarginPx)
             }
         }
     }
@@ -136,9 +139,9 @@ class FloatingMenu(
         MenuWidgetFactory.addButton(label, false, context, tabButtonsLayout).apply {
             layoutParams = LayoutParams(0, WRAP_CONTENT, 1f).apply {
                 setMargins(
-                    MenuDesign.Measurements.BUTTON_MARGIN,
+                    Dimensions.getInstance(context).buttonMarginPx,
                     0,
-                    MenuDesign.Measurements.BUTTON_MARGIN,
+                    Dimensions.getInstance(context).buttonMarginPx,
                     0
                 )
             }

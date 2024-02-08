@@ -17,13 +17,13 @@ private:
     static void setShield(JNIEnv*, jobject, jboolean value);
     static void setInvincibility(JNIEnv*, jobject, jboolean value);
     static void setSuperForm(JNIEnv*, jobject, jboolean value);
+    static void setSaveFilePath(JNIEnv* env, jobject, jstring saveFilePathJvm);
     static jintArray readSaveFile(JNIEnv* env, jobject, jint slotIndex);
     static jboolean writeSaveFile(JNIEnv* env, jobject, jint slotIndex, jintArray saveSlotDataJvm);
-    static void setSaveFilePath(JNIEnv* env, jobject, jstring saveFilePathJvm);
+    static void startCheatThread();
     static void exitThread(JNIEnv*, jobject);
 
 public:
     static int registerNativeMethods(JNIEnv* env);
-    static void startCheatThread();
 
 };

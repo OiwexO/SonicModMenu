@@ -1,11 +1,11 @@
-package com.iwex.sonicmodmenu.util
+package com.iwex.sonicmodmenu.presentation
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.text.InputFilter.LengthFilter
@@ -24,6 +24,8 @@ import android.widget.SeekBar
 import android.widget.Switch
 import android.widget.TextView
 import androidx.core.view.setMargins
+import com.iwex.sonicmodmenu.presentation.resource.Colors
+import com.iwex.sonicmodmenu.presentation.resource.Dimensions
 
 
 class MenuWidgetFactory {
@@ -40,12 +42,19 @@ class MenuWidgetFactory {
             return Switch(context).apply {
                 isChecked = value
                 text = label
-                minHeight = MenuDesign.Measurements.SWITCH_HEIGHT
-//                if (Build.VERSION.SDK_INT >= 23) {
-//                    thumbTintList = ColorStateList.valueOf(MenuDesign.Colors.SWITCH_THUMB)
-//                    trackTintList = ColorStateList.valueOf(MenuDesign.Colors.BUTTON_TEXT)
-//                }
-                setTextColor(MenuDesign.Colors.MAIN)
+                textSize = Dimensions.getInstance(context).switchTextSizeSp
+                minHeight = Dimensions.getInstance(context).switchHeightPx
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    thumbTintList = ColorStateList(
+                        arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                        intArrayOf(Colors.SWITCH_THUMB_ENABLED, Colors.SWITCH_THUMB_DISABLED)
+                    )
+                    trackTintList = ColorStateList(
+                        arrayOf(intArrayOf(android.R.attr.state_checked), intArrayOf()),
+                        intArrayOf(Colors.SWITCH_TRACK_ENABLED, Colors.SWITCH_TRACK_DISABLED)
+                    )
+                }
+                setTextColor(Colors.MAIN_TEXT)
                 parent.addView(this)
                 setOnCheckedChangeListener { _, isChecked ->
                     checkedListener(isChecked)
@@ -71,12 +80,12 @@ class MenuWidgetFactory {
             return SeekBar(context).apply {
                 this.max = max
                 this.progress = progress
-                thumb = ColorDrawable(MenuDesign.Colors.MAIN)
+                thumbTintList = ColorStateList.valueOf(Colors.SEEKBAR_THUMB)
                 progressDrawable.colorFilter = PorterDuffColorFilter(
-                    MenuDesign.Colors.SEEKBAR_PROGRESS, PorterDuff.Mode.SRC_ATOP
+                    Colors.SEEKBAR_PROGRESS, PorterDuff.Mode.SRC_ATOP
                 )
-                if (Build.VERSION.SDK_INT >= 29) {
-                    minHeight = MenuDesign.Measurements.SEEKBAR_HEIGHT
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    minHeight = Dimensions.getInstance(context).seekbarHeightPx
                 }
                 parent.addView(this)
                 setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -105,7 +114,8 @@ class MenuWidgetFactory {
         ): TextView {
             return TextView(context).apply {
                 text = String.format("%s: %s", label, value)
-                setTextColor(MenuDesign.Colors.MAIN)
+                textSize = Dimensions.getInstance(context).seekbarTextSizeSp
+                setTextColor(Colors.MAIN_TEXT)
                 parent.addView(this)
             }
         }
@@ -118,25 +128,26 @@ class MenuWidgetFactory {
         ): Button {
             return Button(context).apply {
                 text = label
+                textSize = Dimensions.getInstance(context).buttonTextSizeSp
                 if (addMargin) {
                     layoutParams = LinearLayout.LayoutParams(
                         LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT
                     ).apply {
-                        setMargins(MenuDesign.Measurements.BUTTON_MARGIN)
+                        setMargins(Dimensions.getInstance(context).buttonMarginPx)
                     }
                 }
-                background = getButtonBackground()
-                setTextColor(MenuDesign.Colors.BUTTON_TEXT)
+                background = getButtonBackground(context)
+                setTextColor(Colors.BUTTON_TEXT)
                 gravity = Gravity.CENTER
                 parent?.addView(this)
             }
         }
 
-        private fun getButtonBackground(): GradientDrawable {
+        private fun getButtonBackground(context: Context): GradientDrawable {
             return GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
-                cornerRadius = MenuDesign.Measurements.BUTTON_CORNER_RADIUS
-                setColor(MenuDesign.Colors.BUTTON_BACKGROUND)
+                cornerRadius = Dimensions.getInstance(context).buttonCornerRadiusPx
+                setColor(Colors.BUTTON_BACKGROUND)
             }
         }
 
@@ -148,8 +159,8 @@ class MenuWidgetFactory {
             return TextView(context).apply {
                 text = label
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                setTextColor(MenuDesign.Colors.MAIN)
-                textSize = MenuDesign.Measurements.TITLE_TEXT_SIZE
+                setTextColor(Colors.MAIN_TEXT)
+                textSize = Dimensions.getInstance(context).titleTextSizeSp
                 parent.addView(this)
             }
         }
@@ -166,14 +177,20 @@ class MenuWidgetFactory {
             val linearLayout = LinearLayout(context)
             val widgetButton = Button(context).apply {
                 text = String.format("%s: %d", label, 0)
+                textSize = Dimensions.getInstance(context).numberInputTextSizeSp
                 isAllCaps = false
                 layoutParams = LinearLayout.LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT
                 ).apply {
-                    setMargins(MenuDesign.Measurements.BUTTON_MARGIN)
+                    setMargins(
+                        0,
+                        Dimensions.getInstance(context).numberInputMarginPx,
+                        0,
+                        Dimensions.getInstance(context).numberInputMarginPx
+                    )
                 }
-                background = getButtonBackground()
-                setTextColor(MenuDesign.Colors.BUTTON_TEXT)
+                background = getNumberInputBackground(context)
+                setTextColor(Colors.MAIN_TEXT)
                 setOnClickListener {
                     showNumberInputDialog(
                         context,
@@ -195,6 +212,14 @@ class MenuWidgetFactory {
             linearLayout.addView(widgetButton)
             parent.addView(linearLayout)
             return widgetButton
+        }
+
+        private fun getNumberInputBackground(context: Context): GradientDrawable {
+            return GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = Dimensions.getInstance(context).numberInputCornerRadiusPx
+                setColor(Colors.NUMBER_INPUT_BACKGROUND)
+            }
         }
 
         private fun showNumberInputDialog(
@@ -251,7 +276,7 @@ class MenuWidgetFactory {
                 onFocusChangeListener = OnFocusChangeListener { _, hasFocus ->
                     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     if (hasFocus) {
-                        imm.showSoftInput(this, InputMethodManager.SHOW_FORCED)
+                        imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
                     } else {
                         imm.hideSoftInputFromWindow(windowToken, 0)
                     }

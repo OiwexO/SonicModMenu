@@ -1,4 +1,4 @@
-package com.iwex.sonicmodmenu.util
+package com.iwex.sonicmodmenu.presentation.view
 
 import android.annotation.SuppressLint
 import android.view.MotionEvent
@@ -8,6 +8,7 @@ import kotlin.math.absoluteValue
 
 class FloatingMenuTouchListener(
     private val layoutParams: WindowManager.LayoutParams,
+    private val scaledTouchSlop: Float,
     private val onViewMoveListener: (View, WindowManager.LayoutParams) -> Unit
 ) : View.OnTouchListener {
     private var initialTouchX = 0f
@@ -17,7 +18,6 @@ class FloatingMenuTouchListener(
 
     private val minAlpha = 0.5f
     private val maxAlpha = 1.0f
-    private val slopDistance = MenuDesign.slopDistance
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
@@ -43,7 +43,7 @@ class FloatingMenuTouchListener(
         val deltaX = (motionEvent.rawX - initialTouchX).absoluteValue
         val deltaY = (motionEvent.rawY - initialTouchY).absoluteValue
         // Check whether it's a swipe or click event
-        if (deltaX < slopDistance && deltaY < slopDistance) {
+        if (deltaX < scaledTouchSlop && deltaY < scaledTouchSlop) {
             view.performClick()
         }
     }
