@@ -57,7 +57,6 @@ class SaveEditorTab(
             context,
             this
         )
-
         characterSeekbar = MenuWidgetFactory.addSeekBar(
             LABEL_CHARACTER,
             MAX_CHARACTER,
@@ -67,7 +66,6 @@ class SaveEditorTab(
             this,
             CHARACTERS
         )
-
         livesInput = MenuWidgetFactory.addNumberInput(
             LABEL_LIVES,
             MAX_LIVES,
@@ -75,7 +73,6 @@ class SaveEditorTab(
             context,
             this
         )
-
         scoreInput = MenuWidgetFactory.addNumberInput(
             LABEL_SCORE,
             MAX_SCORE,
@@ -83,7 +80,6 @@ class SaveEditorTab(
             context,
             this
         )
-
         bonusScoreInput = MenuWidgetFactory.addNumberInput(
             LABEL_BONUS_SCORE,
             MAX_BONUS_SCORE,
@@ -91,7 +87,6 @@ class SaveEditorTab(
             context,
             this
         )
-
         stageInput = MenuWidgetFactory.addNumberInput(
             LABEL_STAGE,
             if (GameVersionChecker.isSonic2) MAX_STAGE_SONIC2 else MAX_STAGE_SONIC1,
@@ -99,7 +94,6 @@ class SaveEditorTab(
             context,
             this
         )
-
         emeraldsInput = MenuWidgetFactory.addNumberInput(
             LABEL_EMERALDS,
             if (GameVersionChecker.isSonic2) MAX_EMERALDS_SONIC2 else MAX_EMERALDS_SONIC1,
@@ -108,7 +102,6 @@ class SaveEditorTab(
             this,
             true
         )
-
         editSlotButton = MenuWidgetFactory.addButton(
             LABEL_EDIT_SLOT,
             true,
@@ -123,8 +116,6 @@ class SaveEditorTab(
                 Toast.LENGTH_LONG
             ).show()
         }
-        readSaveSlot(0)
-
     }
 
     private fun readSaveSlot(slotIndex: Int) {
@@ -134,7 +125,16 @@ class SaveEditorTab(
         scoreInput.text = String.format("%s: %d", LABEL_SCORE, saveSlotState.score)
         bonusScoreInput.text = String.format("%s: %d", LABEL_BONUS_SCORE, saveSlotState.bonusScore)
         stageInput.text = String.format("%s: %d", LABEL_STAGE, saveSlotState.stage)
-        emeraldsInput.text = String.format("%s: %d", LABEL_EMERALDS, saveSlotState.emeralds)
+        emeraldsInput.text = String.format(
+            "%s: %s",
+            LABEL_EMERALDS,
+            Integer.toBinaryString(saveSlotState.emeralds)
+        )
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        readSaveSlot(saveSlotSeekbar.progress)
     }
 
 }

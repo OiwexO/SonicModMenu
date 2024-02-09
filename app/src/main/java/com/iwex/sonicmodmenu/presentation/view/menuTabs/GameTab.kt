@@ -42,7 +42,6 @@ class GameTab(
             context,
             this
         )
-
         livesInput = MenuWidgetFactory.addNumberInput(
             LABEL_LIVES,
             MAX_LIVES,
@@ -50,7 +49,6 @@ class GameTab(
             context,
             this
         )
-
         ringsInput = MenuWidgetFactory.addNumberInput(
             LABEL_RINGS,
             MAX_RINGS,
@@ -58,7 +56,6 @@ class GameTab(
             context,
             this
         )
-
         shieldSwitch = MenuWidgetFactory.addSwitch(
             false,
             viewModel::onShieldChange,
@@ -66,7 +63,6 @@ class GameTab(
             context,
             this
         )
-
         invincibilitySwitch = MenuWidgetFactory.addSwitch(
             false,
             viewModel::onInvincibilityChange,
@@ -74,7 +70,6 @@ class GameTab(
             context,
             this
         )
-
         superFormSwitch = MenuWidgetFactory.addSwitch(
             false,
             viewModel::onSuperFormChange,
@@ -82,7 +77,6 @@ class GameTab(
             context,
             this
         )
-
     }
 
 }

@@ -20,6 +20,16 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+# Keep the AndroidX library
+-keep class androidx.** { *; }
+-keep interface androidx.** { *; }
+-keep enum androidx.** { *; }
+
+# Keep the support library
+-keep class android.support.** { *; }
+-keep interface android.support.** { *; }
+-keep enum android.support.** { *; }
+
 -keep class com.iwex.sonicmodmenu.domain.NativeBridge$Companion { *; }
 -keep class com.iwex.sonicmodmenu.presentation.activity.LauncherActivity$Companion { *; }
 -keepclassmembers class com.iwex.sonicmodmenu.presentation.activity.LauncherActivity {

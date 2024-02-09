@@ -64,7 +64,6 @@ class OtherTab(context: Context) : BaseMenuTab(context) {
             context.stopService(serviceIntent)
             true
         }
-
     }
 
     private fun openUrl(context: Context, url: String) {
@@ -74,4 +73,5 @@ class OtherTab(context: Context) : BaseMenuTab(context) {
             context.startActivity(webIntent)
         }
     }
+
 }
